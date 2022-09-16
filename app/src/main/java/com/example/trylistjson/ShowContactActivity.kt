@@ -3,20 +3,26 @@ package com.example.trylistjson
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
 class ShowContactActivity : AppCompatActivity() {
 
     private val contactList: MutableList<Contact> = mutableListOf()
+    private lateinit var rv: RecyclerView
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_show_contact)
         getContacts()
-        contactList.forEach{
-            Log.d("HeyBro!",it.toString())
-        }
+        rv = findViewById(R.id.recycleView)
+        val adapter = ContactRVAdapter(this, contactList)
+        rv.layoutManager = LinearLayoutManager(this)
+        rv.adapter = adapter
+
     }
 
     private fun getContacts(){
