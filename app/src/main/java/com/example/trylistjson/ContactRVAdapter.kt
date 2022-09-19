@@ -4,11 +4,16 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView.OnItemClickListener
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class ContactRVAdapter(context: Context?, val data:MutableList<Contact>) : RecyclerView.Adapter<ContactViewHolder?>(){
+class ContactRVAdapter(context: Context?, val data:MutableList<Contact>) : RecyclerView.Adapter<ContactRVAdapter.ContactViewHolder?>(){
 
     private val layoutInflater: LayoutInflater = LayoutInflater.from(context)
+
+    private var iClickListener: ItemClickListener? = null
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ContactViewHolder {
         val view: View = layoutInflater.inflate(R.layout.item_contact, parent, false)
@@ -22,5 +27,28 @@ class ContactRVAdapter(context: Context?, val data:MutableList<Contact>) : Recyc
     }
 
     override fun getItemCount(): Int = data.size
+
+    inner class ContactViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+        var nameTextView: TextView = itemView.findViewById(R.id.tvName)
+        var emailTextView: TextView = itemView.findViewById(R.id.tvEmail)
+
+        init {
+            itemView.setOnClickListener(this)
+        }
+
+        override fun onClick(view: View?) {
+            iClickListener?.onItemClick(view, adapterPosition)
+        }
+
+    }
+
+    fun setOnClickListener(itemClickListener: ItemClickListener?) {
+        iClickListener = itemClickListener
+    }
+
+    interface ItemClickListener {
+        fun onItemClick(view: View?, position: Int)
+    }
+
 
 }

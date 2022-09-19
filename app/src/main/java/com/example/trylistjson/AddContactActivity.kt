@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import androidx.core.content.edit
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -22,14 +23,28 @@ class AddContactActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_contact)
         getContacts()
-
+        val index = intent.getIntExtra("index", -1)
         name = findViewById(R.id.editTextTextPersonName)
         email = findViewById(R.id.editTextTextEmailAddress)
         button = findViewById(R.id.button3)
-
+        if (index > -1){
+            button.setText("Изменить контакт")
+            name.setText(contactList[index].name)
+            email.setText(contactList[index].email)
+            Toast.makeText(this, "position:  $index", Toast.LENGTH_SHORT).show()
+        }
         button.setOnClickListener {
-            addContact(name.text.toString(), email.text.toString())
-            Log.d("HeyBro!", contactList.toString())
+            if (index == -1){
+                addContact(name.text.toString(), email.text.toString())
+            } else {
+                contactList[index].name = name.text.toString()
+                contactList[index].email = email.text.toString()
+                val preferences = getSharedPreferences("pref", MODE_PRIVATE)
+                preferences.edit {
+                    this.putString("json", Gson().toJson(contactList).toString())
+                }
+            }
+
         }
     }
 
