@@ -17,19 +17,41 @@ class AddContactActivity : AppCompatActivity() {
     private lateinit var name:EditText
     private lateinit var email:EditText
     private lateinit var button: Button
-
+    private var index: Int = -1
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_contact)
         getContacts()
 
+        index = intent.getIntExtra("index", -1)
+
+
+
         name = findViewById(R.id.editTextTextPersonName)
         email = findViewById(R.id.editTextTextEmailAddress)
         button = findViewById(R.id.button3)
 
+        if(index != -1){
+            button.setText("Изменить контакт")
+            name.setText(contactList[index].name)
+            email.setText(contactList[index].email)
+        }
+
         button.setOnClickListener {
-            addContact(name.text.toString(), email.text.toString())
-            Log.d("HeyBro!", contactList.toString())
+
+            if (index == -1){
+                addContact(name.text.toString(), email.text.toString())
+                Log.d("HeyBro!", contactList.toString())
+            } else {
+                contactList[index].name = name.text.toString()
+                contactList[index].email = email.text.toString()
+                val preferences = getSharedPreferences("pref", MODE_PRIVATE)
+                preferences.edit {
+                    this.putString("json", Gson().toJson(contactList).toString())
+                }
+            }
+            name.setText("")
+            email.setText("")
         }
     }
 
