@@ -31,7 +31,7 @@ class ShowContactActivity : AppCompatActivity() {
                 intent.putExtra("num", position)
                 indexChanged = position
                 startActivity(intent)
-                Toast.makeText(this@ShowContactActivity, "position: $position", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@ShowContactActivity, "position 1: $position", Toast.LENGTH_SHORT).show()
             }
         }
         adapter.setClickListener(rvListener)
